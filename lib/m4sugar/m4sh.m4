@@ -488,6 +488,37 @@ m4_defun([_AS_SHELL_SANITIZE],
 
 AS_BOURNE_COMPATIBLE
 
+# need to catch these variables, before unsetting them later
+: ${AS_COLOR:=$CLICOLOR}; export AS_COLOR
+: ${AS_COLOR_FORCE:=$CLICOLOR_FORCE}; export AS_COLOR_FORCE
+
+as__red=
+as__grn=
+as__yel=
+as__blu=
+as__mag=
+as__cya=
+as__gry=
+as__std=
+as__color=no
+if test "X$AS_COLOR_FORCE" = X0; then
+  as__color=no;
+elif test "X$AS_COLOR_FORCE" = X1; then
+  as__color=yes
+elif { test "X$TERM" != Xdumb || test "X$AS_COLOR" = X1; } && { test -t 1; } 2>/dev/null; then
+  as__color=yes
+fi
+if test $as__color = yes; then
+  as__red='@<:@1;31m'
+  as__grn='@<:@0;32m'
+  as__yel='@<:@0;33m'
+  as__blu='@<:@1;34m'
+  as__mag='@<:@0;35m'
+  as__cya='@<:@0;36m'
+  as__gry='@<:@0;37m'
+  as__std='@<:@m'
+fi
+
 # Reset variables that may have inherited troublesome values from
 # the environment.
 
@@ -2191,6 +2222,7 @@ m4_provide([AS_INIT])
 
 # Forbidden tokens and exceptions.
 m4_pattern_forbid([^_?AS_])
+m4_pattern_allow([^AS_COLOR])
 
 # Bangshe and minimal initialization.
 # Put only the basename of __file__ into HEADER-COMMENT, so that the
