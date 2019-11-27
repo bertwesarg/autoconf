@@ -50,19 +50,23 @@ MOSTLYCLEANFILES = $(srcdir)/*.t
 
 SUFFIXES = .x .1
 
+AC_V_HELP2MAN = $(am__v_HELP2MAN_@AC_V@)
+ac__v_HELP2MAN_ = $(ac__v_HELP2MAN_@AC_DEFAULT_V@)
+ac__v_HELP2MAN_0 = @echo "  H2MAN   " $@;
+ac__v_HELP2MAN_1 = 
+
 .x.1:
-	@echo "Updating man page $@"
-	PATH="$(top_builddir)/tests$(PATH_SEPARATOR)$(top_srcdir)/build-aux$(PATH_SEPARATOR)$$PATH"; \
+	$(AC_V_HELP2MAN)PATH="$(top_builddir)/tests$(PATH_SEPARATOR)$(top_srcdir)/build-aux$(PATH_SEPARATOR)$$PATH"; \
 	export PATH; \
 	$(HELP2MAN) \
 	    --include=$*.x \
 	    --include=$(srcdir)/common.x \
 	    --source='$(PACKAGE_STRING)' \
-	    --output=$@.t `echo '$*' | sed 's,.*/,,'`
+	    --output=$@.t `echo '$*' | sed 's,.*/,,'`; \
 	if sed $(remove_time_stamp) $@ >$@a.t 2>/dev/null && \
 	   sed $(remove_time_stamp) $@.t | cmp $@a.t - >/dev/null 2>&1; then \
 		touch $@; \
 	else \
 		mv $@.t $@; \
-	fi
+	fi; \
 	rm -f $@*.t
